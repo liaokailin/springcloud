@@ -6,6 +6,10 @@
     <modules>
         <module>config-server</module>
         <module>config-client</module>
+        <module>eureka</module>
+        <module>eureka-server</module>
+        <module>eureka-server-replicas</module>
+        <module>eureka-server-replicas-two</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
