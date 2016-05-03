@@ -3,7 +3,7 @@
 ## 简介
 
     hystrix通过服务隔离、熔断(也可以称为断路)、降级等手段控制依赖服务的延迟与失败。
-本篇中主要讲解对spring cloud 对hystrix的集成，至于如何单独使用hystrix可以参考我分享的pdf.
+本篇中主要讲解对spring cloud 对hystrix的集成，至于如何单独使用hystrix可以参考我分享的[pdf](http://download.csdn.net/detail/liaokailin/9509231).
 
 
 ## 创建工程
