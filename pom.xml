@@ -10,6 +10,8 @@
         <module>eureka-server</module>
         <module>eureka-server-replicas</module>
         <module>eureka-server-replicas-two</module>
+        <module>hystrix</module>
+        <module>turbine</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

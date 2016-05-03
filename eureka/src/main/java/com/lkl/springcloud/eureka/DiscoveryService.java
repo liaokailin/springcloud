@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Component
 @RestController
-public class DiscoveryService implements CommandLineRunner {
+public class DiscoveryService {
 
     @Autowired
     private DiscoveryClient discoveryClient;
@@ -43,27 +43,4 @@ public class DiscoveryService implements CommandLineRunner {
         return buf.toString();
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        {
-            StringBuilder buf = new StringBuilder();
-            List<String> serviceIds = discoveryClient.getServices();
-            if(!CollectionUtils.isEmpty(serviceIds)){
-                for(String s : serviceIds){
-                    System.out.println("serviceId:" + s);
-                    List<ServiceInstance> serviceInstances =  discoveryClient.getInstances(s);
-                    if(!CollectionUtils.isEmpty(serviceInstances)){
-                        for(ServiceInstance si:serviceInstances){
-                            buf.append("["+si.getServiceId() +" host=" +si.getHost()+" port="+si.getPort()+" uri="+si.getUri()+"]");
-                        }
-                    }else{
-                        buf.append("no service.");
-                    }
-                }
-            }
-
-
-            System.out.println(buf.toString());
-        }
-    }
 }
