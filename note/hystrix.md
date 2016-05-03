@@ -177,7 +177,7 @@ public class CallDependencyService {
 运行工程，可以访问 http://localhost:9090/hystrix.stream 获取dashboard信息，默认最大打开`5`个终端获取监控信息，可以增加`delay`参数指定获取监控数据间隔时间
 
 
-直接访问**hystrix.stream**肯定是不明智的，官方提供监控war包,下载后放入tomcat中，得到如下界面
+直接访问**hystrix.stream**肯定是不明智的，官方提供监控[hystrix-dashboard-#.#.#.war](http://search.maven.org/#browse%7C1045347652)包,下载后放入tomcat中，得到如下界面
 ![hystrix-dashboard](https://raw.githubusercontent.com/liaokailin/pic-repo/master/hystrix-dashboard.png)
 
 输入http://localhost:9090/hystrix.stream 点击 `Monitor stream` 进入Dashboard界面
