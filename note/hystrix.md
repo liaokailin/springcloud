@@ -3,5 +3,187 @@
 ## 简介
 
     hystrix通过服务隔离、熔断(也可以称为断路)、降级等手段控制依赖服务的延迟与失败。
+本篇中主要讲解对spring cloud 对hystrix的集成，至于如何单独使用hystrix可以参考我分享的pdf.
 
+
+## 创建工程
+
+### 引入依赖
+
+```
+  <!--hystrix-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
+        </dependency>
+
+        <!--hystrix-dashboard 监控-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>
+        </dependency>
+        
+```
+
+`spring-cloud-starter-hystrix` 核心jar 
+
+`spring-cloud-starter-hystrix-dashboard` 监控jar
+
+
+
+### EnableCircuitBreaker
+
+使用`EnableCircuitBreaker`或者 `EnableHystrix` 表明`Spring boot`工程启用hystrix,两个注解是等价的.
+
+`Application.java`
+
+```
+package com.lkl.springcloud.hystrix;
+
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
+
+/**
+ * Created by liaokailin on 16/5/1.
+ */
+@SpringBootApplication
+@EnableCircuitBreaker
+@EnableHystrixDashboard
+public class Application {
+
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(Application.class).web(true).run(args);
+    }
+}
+
+```
     
+其中`EnableHystrixDashboard`注解表示启动对hystrix的监控，后面会用到
+
+随后模拟一个调用三方依赖服务
+
+`controller`-> `service` -> `dependency service`
+
+------------------------------------------------
+
+
+`controller`
+```
+package com.lkl.springcloud.hystrix.controller;
+
+import com.lkl.springcloud.hystrix.service.HystrixService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 模拟一个对外的接口
+ * Created by liaokailin on 16/5/1.
+ */
+@RestController
+public class HystrixController {
+
+    @Autowired
+    private HystrixService service;
+    /**
+     * 调用依赖的服务
+     */
+    @RequestMapping("/call")
+    public String callDependencyService(){
+        return service.callDependencyService();
+    }
+}
+
+
+```
+
+`service`
+
+```
+package com.lkl.springcloud.hystrix.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * 依赖服务
+ * Created by liaokailin on 16/5/1.
+ */
+@Service
+public class HystrixService {
+
+    @Autowired
+    private CallDependencyService dependencyService;
+    public String callDependencyService() {
+        return dependencyService.mockGetUserInfo();
+    }
+}
+
+```
+
+
+`dependency service`
+
+```
+package com.lkl.springcloud.hystrix.service;
+
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import org.springframework.stereotype.Component;
+
+import java.util.Random;
+
+/**
+ * 调用依赖服务，通过hystrix包装调用服务
+ * Created by liaokailin on 16/5/1.
+ */
+@Component
+public class CallDependencyService {
+
+    private Random random = new Random();
+    /**
+     * 模拟获取用户信息(通过网络调用)
+     * @return
+     */
+    @HystrixCommand(fallbackMethod = "fallback")
+    public String mockGetUserInfo(){
+        int randomInt= random.nextInt(10) ;
+        if(randomInt<8){  //模拟调用失败情况
+            throw new RuntimeException("call dependency service fail.");
+        }else{
+            return "UserName:liaokailin;number:"+randomInt;
+        }
+    }
+
+    public String fallback(){
+        return "some exception occur call fallback method.";
+    }
+}
+
+```
+
+`HystrixCommand` 表明该方法为hystrix包裹，可以对依赖服务进行隔离、降级、快速失败、快速重试等等hystrix相关功能 
+    该注解属性较多，下面讲解其中几个
+    
+ * fallbackMethod 降级方法
+ * commandProperties 普通配置属性，可以配置HystrixCommand对应属性，例如采用线程池还是信号量隔离、熔断器熔断规则等等
+ * ignoreExceptions 忽略的异常，默认`HystrixBadRequestException`不计入失败
+ * groupKey() 组名称，默认使用类名称
+ * commandKey 命令名称，默认使用方法名
+ 
+###  Dashboard
+
+运行工程，可以访问 http://localhost:9090/hystrix.stream 获取dashboard信息，默认最大打开`5`个终端获取监控信息，可以增加`delay`参数指定获取监控数据间隔时间
+
+
+直接访问**hystrix.stream**肯定是不明智的，官方提供监控war包,下载后放入tomcat中，得到如下界面
+![hystrix-dashboard](https://raw.githubusercontent.com/liaokailin/pic-repo/master/hystrix-dashboard.png)
+
+输入http://localhost:9090/hystrix.stream 点击 `Monitor stream` 进入Dashboard界面
+
+访问 http://localhost:/9090/call  观察进入Dashboard变化
+![hystrix-dashboard](https://raw.githubusercontent.com/liaokailin/pic-repo/master/hystrix-dashborad-show.png)
+
+
+ok ~ it's work !  more about is [here](https://github.com/liaokailin/springcloud)
