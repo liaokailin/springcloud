@@ -12,6 +12,7 @@
         <module>eureka-server-replicas-two</module>
         <module>hystrix</module>
         <module>turbine</module>
+        <module>ribbon</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
