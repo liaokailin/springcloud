@@ -2,4 +2,4 @@
 /.project
 *.iml
 /.idea
-/target
+/*/target

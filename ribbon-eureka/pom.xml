@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ribbon</artifactId>
+    <artifactId>ribbon-eureka</artifactId>
 
     <dependencyManagement>
         <dependencies>
@@ -34,7 +34,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!--eureka服务
+        <!--eureka服务  -->
          <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
@@ -44,7 +44,7 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka-server</artifactId>
         </dependency>
-          -->
+
         <!--ribbon-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

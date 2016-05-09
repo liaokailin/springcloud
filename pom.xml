@@ -13,6 +13,7 @@
         <module>hystrix</module>
         <module>turbine</module>
         <module>ribbon</module>
+        <module>ribbon-eureka</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
