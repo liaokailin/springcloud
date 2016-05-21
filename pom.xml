@@ -14,6 +14,11 @@
         <module>turbine</module>
         <module>ribbon</module>
         <module>ribbon-eureka</module>
+        <module>netflix-feign</module>
+        <module>feign</module>
+        <module>feign-ribbion-eureka</module>
+        <module>zuul</module>
+
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
