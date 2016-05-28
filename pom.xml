@@ -15,8 +15,8 @@
         <module>netflix-feign</module>
         <module>feign</module>
         <module>feign-ribbion-eureka</module>
-    <module>zuul</module>
-  </modules>
+        <module>myzuul</module>
+    </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
