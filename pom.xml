@@ -16,6 +16,7 @@
         <module>feign</module>
         <module>feign-ribbion-eureka</module>
         <module>myzuul</module>
+        <module>consul</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
